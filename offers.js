@@ -1,36 +1,24 @@
+const TAG = "ashrafhassa03-21";
+
 const offers = [
   {
-    title: "سماعة بلوتوث لاسلكية",
+    title: "اكتب اسم المنتج هنا",
     store: "أمازون مصر",
     category: "electronics",
-    oldPrice: 900,
-    newPrice: 549,
-    image: "https://via.placeholder.com/400x300?text=Offer+1",
-    link: "#"
-  },
-  {
-    title: "ساعة ذكية رياضية",
-    store: "نون",
-    category: "electronics",
-    oldPrice: 1500,
-    newPrice: 999,
-    image: "https://via.placeholder.com/400x300?text=Offer+2",
-    link: "#"
-  },
-  {
-    title: "حذاء رياضي رجالي",
-    store: "جوميا",
-    category: "fashion",
-    oldPrice: 800,
-    newPrice: 450,
-    image: "https://via.placeholder.com/400x300?text=Offer+3",
-    link: "#"
+    asin: "ضع_كود_المنتج"
   }
+  // لإضافة منتج تاني: حط فاصلة بعد القوس اللي فوق، وانسخ نفس الشكل
 ];
+
+const icons = { electronics: "📱", fashion: "👟", home: "🏠", grocery: "🛒" };
 
 const container = document.getElementById("offers");
 const searchInput = document.getElementById("search");
 const categorySelect = document.getElementById("category");
+
+function buildLink(o) {
+  return "https://www.amazon.eg/dp/" + o.asin + "?tag=" + TAG;
+}
 
 function render() {
   const q = searchInput.value.trim().toLowerCase();
@@ -41,17 +29,14 @@ function render() {
     .filter(o => (cat === "all" || o.category === cat) &&
                  (o.title + o.store).toLowerCase().includes(q))
     .forEach(o => {
-      const discount = Math.round((1 - o.newPrice / o.oldPrice) * 100);
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <img src="${o.image}" alt="${o.title}" loading="lazy">
+        <div style="height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:#fff3e0;">${icons[o.category] || "🛍️"}</div>
         <div class="body">
-          <span class="badge">خصم ${discount}%</span>
           <h3>${o.title}</h3>
           <span class="store">${o.store}</span>
-          <div><span class="price-new">${o.newPrice} ج.م</span> <span class="price-old">${o.oldPrice} ج.م</span></div>
-          <a class="btn" href="${o.link}" target="_blank" rel="nofollow sponsored noopener">اشتري الآن</a>
+          <a class="btn" href="${buildLink(o)}" target="_blank" rel="nofollow sponsored noopener">شوف السعر على أمازون</a>
         </div>`;
       container.appendChild(card);
     });
