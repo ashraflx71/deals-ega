@@ -1,6 +1,6 @@
 const TAG = "ashrafhassa03-21";
 
-// القسم | العنوان | كلمة البحث (أو رابط) | أيقونة أو اسم صورة مرفوعة (اختياري)
+// الشكل: القسم | العنوان | كلمة البحث (أو رابط منتج) | أيقونة أو رابط صورة (اختياري)
 const PRODUCTS = `
 electronics | سماعات بلوتوث لاسلكية | سماعات بلوتوث لاسلكية | 🎧
 electronics | باور بانك 20000 مللي أمبير | باور بانك 20000 | 🔋
@@ -8,6 +8,15 @@ electronics | ساعة ذكية | ساعة ذكية | ⌚
 electronics | شاحن موبايل سريع | شاحن سريع تايب سي | 🔌
 electronics | سماعة جيمنج | سماعة جيمنج | 🎮
 electronics | كشاف LED قابل للشحن | كشاف LED قابل للشحن | 🔦
+electronics | ماوس بلوتوث لاسلكي قابل للشحن | ماوس بلوتوث لاسلكي قابل لإعادة الشحن | 🖱️
+electronics | ماوس M256 لاسلكي صامت | ماوس M256 لاسلكي بلوتوث | 🖱️
+electronics | كابل USB-C من أنكر | كابل انكر USB-C | 🔌
+electronics | باور بانك 10000 مغناطيسي | باور بانك جيه ار 10000 مغناطيسي | 🔋
+electronics | فلاش ميموري كينغستون 64 جيجا | فلاش ميموري كينغستون 64 جيجا | 💾
+electronics | حامل لابتوب قابل للطي | حامل لابتوب قابل للطي ألومنيوم | 💻
+electronics | جراب آيفون 17 برو سيليكون | جراب ايفون 17 برو سيليكون | 📱
+electronics | جراب سامسونج A52 | جراب سامسونج A52 | 📱
+electronics | بطاريات AA كاميليون | بطاريات AA كاميليون | 🔋
 fashion | حذاء رياضي رجالي | حذاء رياضي رجالي | 👟
 fashion | حذاء رياضي حريمي | حذاء رياضي حريمي | 👟
 fashion | شنطة ظهر | شنطة ظهر | 🎒
@@ -16,6 +25,13 @@ home | خلاط كهربائي | خلاط كهربائي | 🥤
 home | مكواة بخار | مكواة بخار | 👔
 home | مروحة | مروحة | 🌀
 home | طقم حلل | طقم حلل | 🍳
+home | شفاطات معدنية قابلة لإعادة الاستخدام | شفاطات استانلس ستيل | 🥤
+home | شماعات ملابس معدنية 10 قطع | شماعات ملابس 10 قطع | 👔
+home | سلال تخزين قماشية قابلة للطي | سلال تخزين قماشية | 🧺
+home | طقم تنظيف أرضيات شرشوبة ودلو | شرشوبة مسطحة ودلو | 🧹
+home | بخاخ زيت للطبخ | بخاخ زيت زيتون للمطبخ | 🫒
+home | مضرب رغوة حليب قابل للشحن | مضرب رغوة حليب قابل للشحن | ☕
+home | نبات صناعي للديكور | نبات صناعي يوكاليبتوس | 🌿
 grocery | قهوة | قهوة | ☕
 grocery | شوكولاتة | شوكولاتة | 🍫
 `;
@@ -33,8 +49,8 @@ function buildLink(x) {
 }
 
 function visual(o) {
-  if (/\.(jpg|jpeg|png|webp)$/i.test(o.icon)) {
-    return `<img src="${o.icon}" alt="${o.title}" style="width:100%;height:160px;object-fit:cover;">`;
+  if (o.icon.startsWith("http") || /\.(jpg|jpeg|png|webp)$/i.test(o.icon)) {
+    return `<img src="${o.icon}" alt="${o.title}" loading="lazy" style="width:100%;height:160px;object-fit:cover;">`;
   }
   return `<div style="height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:${bg[o.category] || bg.grocery};">${o.icon || "🛍️"}</div>`;
 }
