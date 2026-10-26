@@ -1,24 +1,43 @@
 const TAG = "ashrafhassa03-21";
 
-const offers = [
-  {
-    title: "اكتب اسم المنتج هنا",
-    store: "أمازون مصر",
-    category: "electronics",
-    asin: "ضع_كود_المنتج"
-  }
-  // لإضافة منتج تاني: حط فاصلة بعد القوس اللي فوق، وانسخ نفس الشكل
-];
+// الشكل: القسم | العنوان | كلمة البحث على أمازون
+const PRODUCTS = `
+electronics | سماعات بلوتوث لاسلكية | سماعات بلوتوث لاسلكية
+electronics | باور بانك 20000 مللي أمبير | باور بانك 20000
+electronics | ساعة ذكية | ساعة ذكية
+electronics | شاحن موبايل سريع | شاحن سريع تايب سي
+electronics | سماعة جيمنج | سماعة جيمنج
+electronics | كشاف ومصباح LED شحن | كشاف LED قابل للشحن
+fashion | حذاء رياضي رجالي | حذاء رياضي رجالي
+fashion | حذاء رياضي حريمي | حذاء رياضي حريمي
+fashion | شنطة ظهر | شنطة ظهر
+fashion | ساعة يد | ساعة يد رجالي
+home | خلاط كهربائي | خلاط كهربائي
+home | مكواة بخار | مكواة بخار
+home | مروحة | مروحة
+home | طقم أواني طبخ | طقم حلل
+grocery | قهوة ونسكافيه | قهوة
+grocery | شوكولاتة | شوكولاتة
+`;
 
 const icons = { electronics: "📱", fashion: "👟", home: "🏠", grocery: "🛒" };
+
+function buildLink(x) {
+  if (x.startsWith("http")) return x;
+  return "https://www.amazon.eg/s?k=" + encodeURIComponent(x) + "&tag=" + TAG;
+}
+
+const offers = PRODUCTS.split("\n")
+  .map(l => l.trim())
+  .filter(l => l.includes("|"))
+  .map(l => {
+    const [category, title, x] = l.split("|").map(s => s.trim());
+    return { category, title, store: "أمازون مصر", link: buildLink(x) };
+  });
 
 const container = document.getElementById("offers");
 const searchInput = document.getElementById("search");
 const categorySelect = document.getElementById("category");
-
-function buildLink(o) {
-  return "https://www.amazon.eg/dp/" + o.asin + "?tag=" + TAG;
-}
 
 function render() {
   const q = searchInput.value.trim().toLowerCase();
@@ -36,7 +55,7 @@ function render() {
         <div class="body">
           <h3>${o.title}</h3>
           <span class="store">${o.store}</span>
-          <a class="btn" href="${buildLink(o)}" target="_blank" rel="nofollow sponsored noopener">شوف السعر على أمازون</a>
+          <a class="btn" href="${o.link}" target="_blank" rel="nofollow sponsored noopener">شوف العروض</a>
         </div>`;
       container.appendChild(card);
     });
