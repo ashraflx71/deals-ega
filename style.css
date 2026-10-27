@@ -49,3 +49,41 @@
     transform: none;
   }
 }
+
+/* تحسين رابط الانتقال إلى المحتوى الرئيسي */
+.skip-link {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1000;
+  padding: 10px 14px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+
+/* منع تجاوز المحتوى للشاشات الصغيرة */
+body {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 360px) {
+  .search-panel {
+    margin-right: 10px;
+    margin-left: 10px;
+    padding: 14px;
+  }
+
+  .results-section {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
