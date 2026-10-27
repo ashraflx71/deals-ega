@@ -1,36 +1,62 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عروض وخصومات مصر - أحسن الأسعار كل يوم</title>
-  <meta name="description" content="أحدث العروض والخصومات من أشهر المتاجر في مصر، متحدثة كل يوم.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10243a">
+  <meta name="description" content="دليل منتجات للتسوق في مصر. ابحث عن المنتجات وقارن الخيارات والأسعار لدى المتاجر.">
+  <title>عروض وخصومات مصر | دليل التسوق الذكي</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🔥 عروض وخصومات مصر</h1>
-    <p>أحدث العروض من أشهر المتاجر، متحدثة باستمرار</p>
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="brand-mark" aria-hidden="true">🛍️</span>
+      <h1>عروض وخصومات مصر</h1>
+      <p>ابحث عن المنتجات واكتشف خيارات التسوق المناسبة لك</p>
+    </div>
   </header>
 
-  <section class="controls">
-    <input type="text" id="search" placeholder="ابحث عن منتج أو متجر...">
-    <select id="category">
-      <option value="all">كل الأقسام</option>
-      <option value="electronics">إلكترونيات</option>
-      <option value="fashion">أزياء</option>
-      <option value="home">المنزل</option>
-      <option value="grocery">سوبر ماركت</option>
-    </select>
-  </section>
+  <main>
+    <section class="search-panel" aria-label="البحث عن المنتجات">
+      <label for="search">ما المنتج الذي تبحث عنه؟</label>
+      <input
+        type="search"
+        id="search"
+        placeholder="مثال: سماعات بلوتوث..."
+        autocomplete="off"
+      >
 
-  <main id="offers" class="grid"></main>
+      <label for="category">اختر القسم</label>
+      <select id="category">
+        <option value="all">كل الأقسام</option>
+        <option value="electronics">إلكترونيات</option>
+        <option value="fashion">أزياء</option>
+        <option value="home">المنزل</option>
+        <option value="grocery">سوبر ماركت</option>
+      </select>
+      <p class="search-note">المنتجات المعروضة اقتراحات للبحث وليست تأكيدًا لتوافر المخزون أو الخصم.</p>
+    </section>
+
+    <section class="results-section" aria-label="قائمة المنتجات">
+      <div class="results-heading">
+        <h2>منتجات للتسوق</h2>
+        <span id="result-count" aria-live="polite"></span>
+      </div>
+      <div id="offers" class="grid"></div>
+    </section>
+  </main>
 
   <footer>
-    <p>تنبيه: بعض الروابط في الموقع روابط تسويق بالعمولة، يعني ممكن نحصل على عمولة صغيرة لو اشتريت من خلالها، بدون أي تكلفة إضافية عليك.</p>
+    <p class="disclosure">
+      بصفتي مشاركًا في برنامج شركاء أمازون، أكسب من عمليات الشراء المؤهلة.
+    </p>
+    <p>قد نحصل على عمولة من بعض الروابط المؤهلة دون تكلفة إضافية عليك.</p>
+    <p>تحقق من السعر النهائي وتكاليف الشحن وشروط البائع على صفحة المنتج قبل الشراء.</p>
     <p>© 2026 عروض وخصومات مصر</p>
   </footer>
 
-  <script src="offers.js"></script>
+  <script src="offers.js" defer></script>
 </body>
 </html>
