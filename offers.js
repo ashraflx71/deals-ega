@@ -40,6 +40,7 @@ grocery | قهوة | قهوة | ☕
 grocery | شوكولاتة | شوكولاتة | 🍫
 `;
 
+// أسماء الأقسام
 const CATEGORY_NAMES = {
   electronics: "إلكترونيات",
   fashion: "أزياء",
@@ -47,6 +48,7 @@ const CATEGORY_NAMES = {
   grocery: "سوبر ماركت"
 };
 
+// ألوان بطاقات الأقسام
 const CATEGORY_COLORS = {
   electronics: "#e8f2ff",
   fashion: "#fff0f5",
@@ -62,7 +64,7 @@ function buildAmazonSearch(query) {
   return url.toString();
 }
 
-// تحويل قائمة النصوص إلى بيانات منتجات
+// تحويل القائمة النصية إلى منتجات
 const products = PRODUCTS
   .trim()
   .split("\n")
@@ -70,7 +72,6 @@ const products = PRODUCTS
   .filter(Boolean)
   .map(line => {
     const parts = line.split("|").map(value => value.trim());
-
     const [category, title, keywords, icon] = parts;
 
     return {
@@ -78,7 +79,9 @@ const products = PRODUCTS
       title,
       keywords: keywords || title,
       icon: icon || "🛍️",
-      link: buildAmazonSearch(keywords || title)
+      link: buildAmazonSearch(keywords || title),
+      buttonText: "ابحث في أمازون مصر",
+      note: "تحقق من السعر والتوافر وتكاليف الشحن على أمازون مصر."
     };
   })
   .filter(product =>
@@ -87,6 +90,17 @@ const products = PRODUCTS
       product.category
     )
   );
+
+// إضافة منتج Ninja برابط مباشر إلى صفحة المنتج
+products.push({
+  category: "home",
+  title: "محضرة طعام نينجا Ninja BN800EU ثلاثية الوظائف، 1200 واط",
+  keywords: "Ninja BN800EU محضرة طعام خلاط 1200 واط",
+  icon: "🥤",
+  link: "https://www.amazon.eg/dp/B08HSF4FY6?tag=ashrafhassa03-21",
+  buttonText: "عرض المنتج على أمازون مصر",
+  note: "السعر الذي ظهر في الصفحة التي أرسلتها: 15,804.95 جنيه. السعر والخصم والتوافر قد تتغير؛ تحقق من التفاصيل الحالية لدى أمازون."
+});
 
 // الوصول إلى عناصر الصفحة
 const container = document.getElementById("offers");
@@ -100,7 +114,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     "تعذر تشغيل المنتجات: تأكد من وجود العناصر offers وsearch وcategory وresult-count في index.html."
   );
 } else {
-  // تحسين البحث العربي وتوحيد اختلافات كتابة الكلمات
+  // تحسين البحث العربي وتوحيد اختلافات الكتابة
   function normalizeArabic(value) {
     return String(value || "")
       .toLocaleLowerCase("ar")
@@ -116,7 +130,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
       .trim();
   }
 
-  // إنشاء بطاقة منتج بأمان
+  // إنشاء بطاقة منتج
   function createCard(product) {
     const card = document.createElement("article");
     card.className = "card";
@@ -141,6 +155,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     const note = document.createElement("p");
     note.className = "product-note";
     note.textContent =
+      product.note ||
       "تحقق من السعر والتوافر وتكاليف الشحن على أمازون مصر.";
 
     const link = document.createElement("a");
@@ -148,10 +163,12 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     link.href = product.link;
     link.target = "_blank";
     link.rel = "nofollow sponsored noopener noreferrer";
-    link.textContent = "ابحث في أمازون مصر";
+    link.textContent =
+      product.buttonText || "ابحث في أمازون مصر";
+
     link.setAttribute(
       "aria-label",
-      `البحث عن ${product.title} في أمازون مصر`
+      `${product.buttonText || "البحث عن"} ${product.title} في أمازون مصر`
     );
 
     body.append(category, title, note, link);
@@ -164,7 +181,6 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
   function render() {
     const query = normalizeArabic(searchInput.value);
     const selectedCategory = categorySelect.value;
-
     const searchTerms = query ? query.split(" ") : [];
 
     const filtered = products.filter(product => {
