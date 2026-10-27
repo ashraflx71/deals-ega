@@ -5,11 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243a">
-  <meta name="description" content="دليل منتجات للتسوق في مصر. ابحث عن المنتجات وقارن الخيارات والأسعار لدى المتاجر.">
+  <meta name="description" content="دليل التسوق الذكي في مصر. ابحث عن المنتجات واكتشف خيارات التسوق لدى المتاجر، مع روابط تسوق وإفصاح واضح عن التسويق بالعمولة.">
+  <meta name="robots" content="index,follow">
   <title>عروض وخصومات مصر | دليل التسوق الذكي</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header class="site-header">
     <div class="header-inner">
       <span class="brand-mark" aria-hidden="true">🛍️</span>
@@ -36,7 +38,11 @@
         <option value="home">المنزل</option>
         <option value="grocery">سوبر ماركت</option>
       </select>
-      <p class="search-note">المنتجات المعروضة اقتراحات للبحث وليست تأكيدًا لتوافر المخزون أو الخصم.</p>
+
+      <p class="search-note">
+        المنتجات المعروضة اقتراحات للبحث وليست تأكيدًا لتوافر المخزون أو الخصم.
+        تحقق من تفاصيل المنتج والسعر النهائي لدى المتجر قبل الشراء.
+      </p>
     </section>
 
     <section class="results-section" aria-label="قائمة المنتجات">
@@ -44,6 +50,7 @@
         <h2>منتجات للتسوق</h2>
         <span id="result-count" aria-live="polite"></span>
       </div>
+
       <div id="offers" class="grid"></div>
     </section>
   </main>
@@ -52,8 +59,23 @@
     <p class="disclosure">
       بصفتي مشاركًا في برنامج شركاء أمازون، أكسب من عمليات الشراء المؤهلة.
     </p>
-    <p>قد نحصل على عمولة من بعض الروابط المؤهلة دون تكلفة إضافية عليك.</p>
-    <p>تحقق من السعر النهائي وتكاليف الشحن وشروط البائع على صفحة المنتج قبل الشراء.</p>
+
+    <p>
+      قد نحصل على عمولة من بعض الروابط المؤهلة دون تكلفة إضافية عليك.
+    </p>
+
+    <p>
+      تحقق من السعر النهائي وتكاليف الشحن وشروط البائع على صفحة المنتج قبل الشراء.
+    </p>
+
+    <nav aria-label="روابط مهمة">
+      <a href="contact.htm">اتصل بنا</a>
+      <span aria-hidden="true"> | </span>
+      <a href="about.htm">من نحن</a>
+      <span aria-hidden="true"> | </span>
+      <a href="privacy.htm">سياسة الخصوصية</a>
+    </nav>
+
     <p>© 2026 عروض وخصومات مصر</p>
   </footer>
 
