@@ -1,6 +1,7 @@
+
 const TAG = "ashrafhassa03-21";
 
-// الشكل: القسم | العنوان | كلمة البحث (أو رابط منتج) | أيقونة أو رابط صورة (اختياري)
+// القسم | اسم المنتج | كلمات البحث | رمز توضيحي
 const PRODUCTS = `
 electronics | سماعات بلوتوث لاسلكية | سماعات بلوتوث لاسلكية | 🎧
 electronics | باور بانك 20000 مللي أمبير | باور بانك 20000 | 🔋
@@ -8,91 +9,155 @@ electronics | ساعة ذكية | ساعة ذكية | ⌚
 electronics | شاحن موبايل سريع | شاحن سريع تايب سي | 🔌
 electronics | سماعة جيمنج | سماعة جيمنج | 🎮
 electronics | كشاف LED قابل للشحن | كشاف LED قابل للشحن | 🔦
-electronics | ماوس بلوتوث لاسلكي قابل للشحن | ماوس بلوتوث لاسلكي قابل لإعادة الشحن | 🖱️
+electronics | ماوس بلوتوث قابل للشحن | ماوس بلوتوث لاسلكي قابل لإعادة الشحن | 🖱️
 electronics | ماوس M256 لاسلكي صامت | ماوس M256 لاسلكي بلوتوث | 🖱️
-electronics | كابل USB-C من أنكر | كابل انكر USB-C | 🔌
-electronics | باور بانك 10000 مغناطيسي | باور بانك جيه ار 10000 مغناطيسي | 🔋
+electronics | كابل USB-C من أنكر | كابل أنكر USB-C | 🔌
+electronics | باور بانك 10000 مغناطيسي | باور بانك مغناطيسي 10000 | 🔋
 electronics | فلاش ميموري كينغستون 64 جيجا | فلاش ميموري كينغستون 64 جيجا | 💾
-electronics | حامل لابتوب قابل للطي | حامل لابتوب قابل للطي ألومنيوم | 💻
-electronics | جراب آيفون 17 برو سيليكون | جراب ايفون 17 برو سيليكون | 📱
+electronics | حامل لابتوب قابل للطي | حامل لابتوب ألومنيوم قابل للطي | 💻
+electronics | جراب آيفون 17 برو | جراب آيفون 17 برو سيليكون | 📱
 electronics | جراب سامسونج A52 | جراب سامسونج A52 | 📱
 electronics | بطاريات AA كاميليون | بطاريات AA كاميليون | 🔋
 fashion | حذاء رياضي رجالي | حذاء رياضي رجالي | 👟
-fashion | حذاء رياضي حريمي | حذاء رياضي حريمي | 👟
+fashion | حذاء رياضي حريمي | حذاء رياضي نسائي | 👟
 fashion | شنطة ظهر | شنطة ظهر | 🎒
 fashion | ساعة يد رجالي | ساعة يد رجالي | ⌚
 home | خلاط كهربائي | خلاط كهربائي | 🥤
 home | مكواة بخار | مكواة بخار | 👔
-home | مروحة | مروحة | 🌀
-home | طقم حلل | طقم حلل | 🍳
+home | مروحة | مروحة كهربائية | 🌀
+home | طقم حلل | طقم حلل مطبخ | 🍳
 home | شفاطات معدنية قابلة لإعادة الاستخدام | شفاطات استانلس ستيل | 🥤
-home | شماعات ملابس معدنية 10 قطع | شماعات ملابس 10 قطع | 👔
+home | شماعات ملابس معدنية 10 قطع | شماعات ملابس معدنية 10 قطع | 👔
 home | سلال تخزين قماشية قابلة للطي | سلال تخزين قماشية | 🧺
-home | طقم تنظيف أرضيات شرشوبة ودلو | شرشوبة مسطحة ودلو | 🧹
-home | بخاخ زيت للطبخ | بخاخ زيت زيتون للمطبخ | 🫒
+home | طقم تنظيف أرضيات | شرشوبة مسطحة ودلو | 🧹
+home | بخاخ زيت للطبخ | بخاخ زيت للمطبخ | 🫒
 home | مضرب رغوة حليب قابل للشحن | مضرب رغوة حليب قابل للشحن | ☕
 home | نبات صناعي للديكور | نبات صناعي يوكاليبتوس | 🌿
 grocery | قهوة | قهوة | ☕
 grocery | شوكولاتة | شوكولاتة | 🍫
 `;
 
-const bg = {
-  electronics: "linear-gradient(135deg,#e3f2fd,#bbdefb)",
-  fashion: "linear-gradient(135deg,#fce4ec,#f8bbd0)",
-  home: "linear-gradient(135deg,#e8f5e9,#c8e6c9)",
-  grocery: "linear-gradient(135deg,#fff3e0,#ffe0b2)"
+const CATEGORY_NAMES = {
+  electronics: "إلكترونيات",
+  fashion: "أزياء",
+  home: "المنزل",
+  grocery: "سوبر ماركت"
 };
 
-function buildLink(x) {
-  if (x.startsWith("http")) return x;
-  return "https://www.amazon.eg/s?k=" + encodeURIComponent(x) + "&tag=" + TAG;
+const CATEGORY_COLORS = {
+  electronics: "#e8f2ff",
+  fashion: "#fff0f5",
+  home: "#eaf7ed",
+  grocery: "#fff5e6"
+};
+
+function buildAmazonSearch(query) {
+  const url = new URL("https://www.amazon.eg/s");
+  url.searchParams.set("k", query);
+  url.searchParams.set("tag", TAG);
+  return url.toString();
 }
 
-function visual(o) {
-  if (o.icon.startsWith("http") || /\.(jpg|jpeg|png|webp)$/i.test(o.icon)) {
-    return `<img src="${o.icon}" alt="${o.title}" loading="lazy" style="width:100%;height:160px;object-fit:cover;">`;
-  }
-  return `<div style="height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:${bg[o.category] || bg.grocery};">${o.icon || "🛍️"}</div>`;
-}
+const products = PRODUCTS.trim()
+  .split("\n")
+  .map(line => line.trim())
+  .filter(Boolean)
+  .map(line => {
+    const parts = line.split("|").map(value => value.trim());
+    const [category, title, keywords, icon] = parts;
 
-const offers = PRODUCTS.split("\n")
-  .map(l => l.trim())
-  .filter(l => l.includes("|"))
-  .map(l => {
-    const [category, title, x, icon] = l.split("|").map(s => s.trim());
-    return { category, title, store: "أمازون مصر", link: buildLink(x), icon: icon || "" };
-  });
+    return {
+      category,
+      title,
+      keywords: keywords || title,
+      icon: icon || "🛍️",
+      link: buildAmazonSearch(keywords || title)
+    };
+  })
+  .filter(product =>
+    Object.prototype.hasOwnProperty.call(
+      CATEGORY_NAMES,
+      product.category
+    )
+  );
 
 const container = document.getElementById("offers");
 const searchInput = document.getElementById("search");
 const categorySelect = document.getElementById("category");
+const resultCount = document.getElementById("result-count");
+
+function createCard(product) {
+  const card = document.createElement("article");
+  card.className = "card";
+
+  const visual = document.createElement("div");
+  visual.className = "product-visual";
+  visual.style.backgroundColor =
+    CATEGORY_COLORS[product.category] || "#f1f5f9";
+  visual.textContent = product.icon;
+  visual.setAttribute("aria-hidden", "true");
+
+  const body = document.createElement("div");
+  body.className = "product-body";
+
+  const category = document.createElement("span");
+  category.className = "category-label";
+  category.textContent = CATEGORY_NAMES[product.category];
+
+  const title = document.createElement("h3");
+  title.textContent = product.title;
+
+  const note = document.createElement("p");
+  note.className = "product-note";
+  note.textContent = "تحقق من السعر والتوافر لدى البائع";
+
+  const link = document.createElement("a");
+  link.className = "btn";
+  link.href = product.link;
+  link.target = "_blank";
+  link.rel = "nofollow sponsored noopener noreferrer";
+  link.textContent = "ابحث في أمازون مصر";
+  link.setAttribute("aria-label", `البحث عن ${product.title} في أمازون مصر`);
+
+  body.append(category, title, note, link);
+  card.append(visual, body);
+
+  return card;
+}
 
 function render() {
-  const q = searchInput.value.trim().toLowerCase();
-  const cat = categorySelect.value;
-  container.innerHTML = "";
+  const query = searchInput.value.trim().toLocaleLowerCase("ar");
+  const selectedCategory = categorySelect.value;
 
-  offers
-    .filter(o => (cat === "all" || o.category === cat) &&
-                 (o.title + o.store).toLowerCase().includes(q))
-    .forEach(o => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        ${visual(o)}
-        <div class="body">
-          <h3>${o.title}</h3>
-          <span class="store">${o.store}</span>
-          <a class="btn" href="${o.link}" target="_blank" rel="nofollow sponsored noopener">شوف العروض</a>
-        </div>`;
-      container.appendChild(card);
-    });
+  const filtered = products.filter(product => {
+    const matchesCategory =
+      selectedCategory === "all" ||
+      product.category === selectedCategory;
 
-  if (!container.children.length) {
-    container.innerHTML = "<p style='padding:20px'>مفيش عروض مطابقة للبحث.</p>";
+    const searchableText =
+      `${product.title} ${product.keywords} ${CATEGORY_NAMES[product.category]}`
+        .toLocaleLowerCase("ar");
+
+    return matchesCategory && searchableText.includes(query);
+  });
+
+  container.replaceChildren();
+
+  filtered.forEach(product => {
+    container.appendChild(createCard(product));
+  });
+
+  resultCount.textContent = `${filtered.length} منتج`;
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "لم نعثر على منتجات مطابقة. جرّب كلمة بحث أخرى.";
+    container.appendChild(empty);
   }
 }
 
 searchInput.addEventListener("input", render);
 categorySelect.addEventListener("change", render);
+
 render();
