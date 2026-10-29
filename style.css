@@ -11,6 +11,7 @@
   --border: #e2e8f0;
   --radius: 18px;
   --shadow: 0 6px 22px rgba(16, 36, 58, 0.08);
+  --content-width: 1180px;
 }
 
 * {
@@ -19,6 +20,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -31,6 +33,7 @@ body {
 }
 
 img {
+  display: block;
   max-width: 100%;
 }
 
@@ -38,16 +41,26 @@ a {
   color: inherit;
 }
 
+button,
+input,
+select {
+  font: inherit;
+}
+
 header {
-  padding: 30px 16px;
+  padding: 32px 16px;
   color: #fff;
   text-align: center;
-  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  background: linear-gradient(
+    135deg,
+    var(--navy),
+    var(--navy-light)
+  );
 }
 
 header h1 {
   margin: 0 0 8px;
-  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  font-size: clamp(1.65rem, 5vw, 2.5rem);
   line-height: 1.4;
 }
 
@@ -55,17 +68,18 @@ header p {
   max-width: 700px;
   margin: 0 auto;
   color: #e4edf7;
+  font-size: 0.98rem;
 }
 
 main,
 #main-content {
-  width: min(1180px, calc(100% - 28px));
+  width: min(var(--content-width), calc(100% - 28px));
   margin-inline: auto;
 }
 
 #main-content {
-  padding-top: 20px;
-  padding-bottom: 35px;
+  padding-top: 24px;
+  padding-bottom: 36px;
 }
 
 h2 {
@@ -75,12 +89,14 @@ h2 {
 
 #search,
 #category {
+  display: block;
   width: 100%;
+  min-width: 0;
   min-height: 48px;
   padding: 12px 14px;
   border: 1px solid #cbd5e1;
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   color: var(--text);
   font: inherit;
 }
@@ -89,9 +105,15 @@ h2 {
   margin-bottom: 12px;
 }
 
-#search:focus,
-#category:focus {
-  outline: 3px solid rgba(244, 119, 33, 0.22);
+#search::placeholder {
+  color: #718096;
+  opacity: 1;
+}
+
+#search:focus-visible,
+#category:focus-visible {
+  outline: 3px solid rgba(244, 119, 33, 0.25);
+  outline-offset: 2px;
   border-color: var(--orange);
 }
 
@@ -106,59 +128,64 @@ h2 {
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
+  gap: 18px;
   align-items: stretch;
 }
 
 /* بطاقة المنتج */
 .card {
-  min-width: 0;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-@media (hover: hover) {
-  .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(16, 36, 58, 0.13);
-  }
-}
-
-/* مساحة الصورة الكبيرة */
+/* مساحة الصورة */
 .product-visual {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 245px;
+  height: 235px;
   overflow: hidden;
-  background: #eef2f7;
+  background: #fff;
+  border-bottom: 1px solid #edf0f5;
 }
 
 .product-image {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 12px;
+  object-fit: contain;
   object-position: center;
 }
 
 .product-visual.image-fallback {
-  background: linear-gradient(135deg, #e8f2ff, #fff5e6);
+  background: linear-gradient(
+    135deg,
+    #e8f2ff,
+    #fff5e6
+  );
 }
 
 .product-fallback-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 4.5rem;
+  line-height: 1.2;
 }
 
-/* النص داخل البطاقة */
+/* محتوى البطاقة */
 .product-body {
   display: flex;
   flex: 1;
@@ -172,6 +199,7 @@ h2 {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   padding: 4px 11px;
   border-radius: 999px;
   background: #e8f2ff;
@@ -185,6 +213,7 @@ h2 {
   color: var(--navy);
   font-size: 1.08rem;
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .product-note {
@@ -192,6 +221,7 @@ h2 {
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
 /* زر التسوق */
@@ -203,34 +233,39 @@ h2 {
   min-height: 48px;
   margin-top: auto;
   padding: 11px 14px;
-  border: 0;
+  border: 2px solid transparent;
   border-radius: 12px;
   background: var(--orange);
   color: #fff;
   font: inherit;
   font-weight: 700;
+  line-height: 1.6;
   text-align: center;
   text-decoration: none;
-  transition: background 0.2s ease;
+  overflow-wrap: anywhere;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.btn:hover,
-.btn:focus-visible {
+.btn:hover {
   background: var(--orange-dark);
   color: #fff;
 }
 
 .btn:focus-visible {
-  outline: 3px solid rgba(244, 119, 33, 0.35);
+  outline: 3px solid rgba(244, 119, 33, 0.4);
   outline-offset: 3px;
 }
 
+/* رسالة عدم وجود نتائج */
 .empty-state {
   grid-column: 1 / -1;
+  margin: 0;
   padding: 22px;
   border: 1px solid var(--border);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
   color: var(--muted);
   text-align: center;
 }
@@ -242,15 +277,15 @@ h2 {
   padding: 16px;
   border-right: 4px solid var(--orange);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   color: #475569;
   font-size: 0.92rem;
 }
 
-/* روابط أسفل الموقع */
+/* تذييل الموقع */
 footer {
   margin-top: 24px;
-  padding: 24px 16px;
+  padding: 26px 16px;
   background: var(--navy);
   color: #fff;
   text-align: center;
@@ -264,11 +299,17 @@ footer a {
   text-underline-offset: 4px;
 }
 
+footer a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
 footer p {
   margin: 8px 0;
 }
 
-/* هاتف صغير */
+/* الهواتف الصغيرة */
 @media (max-width: 359px) {
   main,
   #main-content {
@@ -281,7 +322,7 @@ footer p {
   }
 
   .product-visual {
-    height: 200px;
+    height: 195px;
   }
 
   .product-body {
@@ -291,13 +332,19 @@ footer p {
   .product-body h3 {
     font-size: 1rem;
   }
+
+  .btn {
+    padding-inline: 9px;
+    font-size: 0.92rem;
+  }
 }
 
-/* هاتف عادي */
+/* الهواتف والشاشات المتوسطة */
 @media (min-width: 520px) {
   #offers,
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
   }
 
   .product-visual {
@@ -305,7 +352,7 @@ footer p {
   }
 }
 
-/* كمبيوتر أو شاشة واسعة */
+/* الكمبيوتر والشاشات الواسعة */
 @media (min-width: 850px) {
   #offers,
   .grid {
@@ -318,7 +365,15 @@ footer p {
   }
 }
 
-/* تقليل الحركة لمن يفضل ذلك */
+/* تأثيرات خفيفة للماوس */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(16, 36, 58, 0.13);
+  }
+}
+
+/* تقليل الحركة حسب إعدادات الجهاز */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
