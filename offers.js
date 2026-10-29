@@ -1,7 +1,7 @@
 
 "use strict";
 
-// معرّف الشريك في أمازون مصر
+// معرّف الشريك الحالي — لا تغيّره
 const TAG = "ashrafhassa03-21";
 
 // القسم | اسم المنتج | كلمات البحث | الرمز التوضيحي
@@ -48,15 +48,54 @@ const CATEGORY_NAMES = {
   grocery: "سوبر ماركت"
 };
 
-// ألوان بطاقات الأقسام
-const CATEGORY_COLORS = {
-  electronics: "#e8f2ff",
-  fashion: "#fff0f5",
-  home: "#eaf7ed",
-  grocery: "#fff5e6"
+// صور فوتوغرافية توضيحية مجانية من Unsplash.
+// الصور تمثل فئات المنتجات ولا تؤكد مطابقة موديل بعينه.
+const CATEGORY_IMAGES = {
+  electronics:
+    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80",
+  fashion:
+    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
+  home:
+    "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=80",
+  grocery:
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80"
 };
 
-// إنشاء رابط بحث في أمازون مصر مع معرّف الشريك
+// صور أقرب لبعض أنواع المنتجات عند توفر صورة مناسبة
+const PRODUCT_IMAGES = [
+  {
+    match: /سماعات|جيمنج/,
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /ساعة/,
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /حذاء/,
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /قهوة|رغوة حليب/,
+    image:
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /خلاط|محضرة طعام|طقم حلل/,
+    image:
+      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /حامل لابتوب/,
+    image:
+      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
+// إنشاء رابط بحث في أمازون مصر بمعرّف الشريك
 function buildAmazonSearch(query) {
   const url = new URL("https://www.amazon.eg/s");
   url.searchParams.set("k", query);
@@ -64,7 +103,7 @@ function buildAmazonSearch(query) {
   return url.toString();
 }
 
-// تحويل القائمة النصية إلى منتجات
+// تحويل القائمة النصية إلى بيانات منتجات
 const products = PRODUCTS
   .trim()
   .split("\n")
@@ -74,14 +113,22 @@ const products = PRODUCTS
     const parts = line.split("|").map(value => value.trim());
     const [category, title, keywords, icon] = parts;
 
+    const imageEntry = PRODUCT_IMAGES.find(entry =>
+      entry.match.test(title)
+    );
+
     return {
       category,
       title,
       keywords: keywords || title,
       icon: icon || "🛍️",
+      image: imageEntry
+        ? imageEntry.image
+        : CATEGORY_IMAGES[category],
       link: buildAmazonSearch(keywords || title),
       buttonText: "ابحث في أمازون مصر",
-      note: "تحقق من السعر والتوافر وتكاليف الشحن على أمازون مصر."
+      note:
+        "صورة توضيحية للفئة. تحقق من صورة المنتج الفعلية والسعر والتوافر والشحن على أمازون مصر."
     };
   })
   .filter(product =>
@@ -91,15 +138,17 @@ const products = PRODUCTS
     )
   );
 
-// إضافة منتج Ninja برابط مباشر إلى صفحة المنتج
+// المنتج ذو الرابط المباشر الذي أضفته سابقًا
 products.push({
   category: "home",
   title: "محضرة طعام نينجا Ninja BN800EU ثلاثية الوظائف، 1200 واط",
   keywords: "Ninja BN800EU محضرة طعام خلاط 1200 واط",
   icon: "🥤",
+  image: CATEGORY_IMAGES.home,
   link: "https://www.amazon.eg/dp/B08HSF4FY6?tag=ashrafhassa03-21",
   buttonText: "عرض المنتج على أمازون مصر",
-  note: "السعر الذي ظهر في الصفحة التي أرسلتها: 15,804.95 جنيه. السعر والخصم والتوافر قد تتغير؛ تحقق من التفاصيل الحالية لدى أمازون."
+  note:
+    "الصورة توضيحية وليست تأكيدًا لصورة الموديل. تحقق من السعر الحالي والمواصفات والتوافر لدى أمازون."
 });
 
 // الوصول إلى عناصر الصفحة
@@ -114,7 +163,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     "تعذر تشغيل المنتجات: تأكد من وجود العناصر offers وsearch وcategory وresult-count في index.html."
   );
 } else {
-  // تحسين البحث العربي وتوحيد اختلافات الكتابة
+  // توحيد اختلافات الكتابة العربية لتحسين البحث
   function normalizeArabic(value) {
     return String(value || "")
       .toLocaleLowerCase("ar")
@@ -130,18 +179,36 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
       .trim();
   }
 
-  // إنشاء بطاقة منتج
+  // إنشاء بطاقة المنتج
   function createCard(product) {
     const card = document.createElement("article");
     card.className = "card";
 
+    // مساحة الصورة
     const visual = document.createElement("div");
     visual.className = "product-visual";
-    visual.style.backgroundColor =
-      CATEGORY_COLORS[product.category] || "#f1f5f9";
-    visual.textContent = product.icon;
-    visual.setAttribute("aria-hidden", "true");
 
+    const img = document.createElement("img");
+    img.className = "product-image";
+    img.src = product.image || CATEGORY_IMAGES[product.category];
+    img.alt = "صورة توضيحية لفئة: " + product.title;
+    img.loading = "lazy";
+    img.decoding = "async";
+
+    // إذا فشلت الصورة، نعرض رمز المنتج بدل مساحة فارغة
+    img.addEventListener("error", function () {
+      visual.classList.add("image-fallback");
+      img.remove();
+      const fallback = document.createElement("span");
+      fallback.className = "product-fallback-icon";
+      fallback.textContent = product.icon;
+      fallback.setAttribute("aria-hidden", "true");
+      visual.appendChild(fallback);
+    }, { once: true });
+
+    visual.appendChild(img);
+
+    // محتوى البطاقة
     const body = document.createElement("div");
     body.className = "product-body";
 
@@ -154,21 +221,18 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
 
     const note = document.createElement("p");
     note.className = "product-note";
-    note.textContent =
-      product.note ||
-      "تحقق من السعر والتوافر وتكاليف الشحن على أمازون مصر.";
+    note.textContent = product.note;
 
     const link = document.createElement("a");
     link.className = "btn";
     link.href = product.link;
     link.target = "_blank";
     link.rel = "nofollow sponsored noopener noreferrer";
-    link.textContent =
-      product.buttonText || "ابحث في أمازون مصر";
+    link.textContent = product.buttonText;
 
     link.setAttribute(
       "aria-label",
-      `${product.buttonText || "البحث عن"} ${product.title} في أمازون مصر`
+      product.buttonText + ": " + product.title
     );
 
     body.append(category, title, note, link);
@@ -177,7 +241,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     return card;
   }
 
-  // عرض المنتجات المطابقة للبحث والقسم
+  // عرض المنتجات حسب البحث والقسم
   function render() {
     const query = normalizeArabic(searchInput.value);
     const selectedCategory = categorySelect.value;
@@ -210,7 +274,6 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
       empty.className = "empty-state";
       empty.textContent =
         "لم نعثر على منتجات مطابقة. جرّب كلمات أخرى أو اختر كل الأقسام.";
-
       fragment.appendChild(empty);
     } else {
       filtered.forEach(product => {
@@ -224,7 +287,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
       `عدد النتائج: ${filtered.length} من ${products.length} منتج`;
   }
 
-  // تحديث النتائج أثناء الكتابة وتغيير القسم
+  // التحديث عند الكتابة أو تغيير القسم
   searchInput.addEventListener("input", render);
   categorySelect.addEventListener("change", render);
 
