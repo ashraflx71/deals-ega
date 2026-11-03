@@ -1,3 +1,4 @@
+
 "use strict";
 
 /* =========================================
@@ -6,7 +7,7 @@
    Amazon Egypt Affiliate
    ========================================= */
 
-// معرّف الشريك الحالي — لا تغيّره
+// معرّف الشريك العام الحالي — لا تغيّره
 const TAG = "ashrafhassa03-21";
 
 // أسماء الأقسام
@@ -107,12 +108,10 @@ const products = PRODUCTS
     const keywords = parts[2] || title;
     const icon = parts[3] || "🛍️";
 
-    // تجاهل أي سطر غير مكتمل
     if (!category || !title) {
       return null;
     }
 
-    // التأكد من صحة القسم
     if (!Object.prototype.hasOwnProperty.call(
       CATEGORY_NAMES,
       category
@@ -120,7 +119,6 @@ const products = PRODUCTS
       return null;
     }
 
-    // البحث عن صورة توضيحية مناسبة
     const imageEntry = PRODUCT_IMAGES.find(entry =>
       entry.match.test(title)
     );
@@ -141,7 +139,10 @@ const products = PRODUCTS
   })
   .filter(Boolean);
 
+// =========================================
 // إضافة منتج نينجا بالرابط المباشر
+// =========================================
+
 products.push({
   category: "home",
   title: "محضرة طعام نينجا Ninja BN800EU ثلاثية الوظائف، 1200 واط",
@@ -151,6 +152,31 @@ products.push({
   link: "https://www.amazon.eg/dp/B08HSF4FY6?tag=" + encodeURIComponent(TAG),
   buttonText: "عرض المنتج على أمازون مصر",
   note: "تحقق من صورة الموديل الفعلية والسعر والمواصفات والتوافر على أمازون مصر."
+});
+
+// =========================================
+// إضافة المنتج رقم 34
+// Logitech G321 LIGHTSPEED
+// =========================================
+
+products.push({
+  category: "electronics",
+
+  title: "سماعة رأس لوجيتك Logitech G321 LIGHTSPEED لاسلكية للألعاب",
+
+  keywords: "Logitech G321 LIGHTSPEED wireless gaming headset",
+
+  icon: "🎧",
+
+  // لا نستخدم صورة غير مؤكدة للموديل
+  image: null,
+
+  // رابط المنتج الذي أرسله صاحب الموقع
+  link: "https://www.amazon.eg/dp/B0FFM18D66/ref=cm_sw_r_as_gl_apa_gl_i_J71R7GVHJ6EGFMS5ATB2?linkCode=ml1&tag=ashrafdealseg-21&linkId=f6f56426d57b2233de2b5608fb6a5e05",
+
+  buttonText: "عرض السماعة على أمازون مصر",
+
+  note: "سماعة ألعاب لاسلكية من لوجيتك، تدعم LIGHTSPEED والبلوتوث، بميكروفون قابل للتوجيه وبطارية تتجاوز 20 ساعة وفق وصف المنتج. تحقق من اللون والمواصفات والسعر والتوافر على أمازون مصر."
 });
 
 // =========================================
@@ -164,9 +190,11 @@ const resultCount = document.getElementById("result-count");
 
 // التحقق من وجود العناصر المطلوبة
 if (!container || !searchInput || !categorySelect || !resultCount) {
+
   console.error(
     "تعذر تشغيل المنتجات. تحقق من وجود العناصر التالية في index.html: offers وsearch وcategory وresult-count."
   );
+
 } else {
 
   // =========================================
@@ -193,6 +221,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
   // =========================================
 
   function showFallback(visual, product) {
+
     visual.classList.add("image-fallback");
 
     const fallback = document.createElement("span");
@@ -209,7 +238,9 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
   // =========================================
 
   function createProductVisual(product) {
+
     const visual = document.createElement("div");
+
     visual.className = "product-visual";
 
     if (!product.image) {
@@ -240,22 +271,28 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
   // =========================================
 
   function createCard(product) {
+
     const card = document.createElement("article");
+
     card.className = "card";
 
     const visual = createProductVisual(product);
 
     const body = document.createElement("div");
+
     body.className = "product-body";
 
     const category = document.createElement("span");
+
     category.className = "category-label";
     category.textContent = CATEGORY_NAMES[product.category];
 
     const title = document.createElement("h3");
+
     title.textContent = product.title;
 
     const note = document.createElement("p");
+
     note.className = "product-note";
     note.textContent = product.note;
 
@@ -264,7 +301,9 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     link.className = "btn";
     link.href = product.link;
     link.target = "_blank";
+
     link.rel = "nofollow sponsored noopener noreferrer";
+
     link.textContent = product.buttonText;
 
     link.setAttribute(
@@ -273,6 +312,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     );
 
     body.append(category, title, note, link);
+
     card.append(visual, body);
 
     return card;
@@ -283,7 +323,9 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
   // =========================================
 
   function render() {
+
     const query = normalizeArabic(searchInput.value);
+
     const selectedCategory = categorySelect.value;
 
     const searchTerms = query
@@ -291,6 +333,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
       : [];
 
     const filtered = products.filter(product => {
+
       const matchesCategory =
         selectedCategory === "all" ||
         product.category === selectedCategory;
@@ -311,15 +354,18 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
     const fragment = document.createDocumentFragment();
 
     if (filtered.length === 0) {
+
       const empty = document.createElement("p");
 
       empty.className = "empty-state";
+
       empty.textContent =
         "لم نعثر على منتجات مطابقة. جرّب كلمات أخرى أو اختر كل الأقسام.";
 
       fragment.appendChild(empty);
 
     } else {
+
       filtered.forEach(product => {
         fragment.appendChild(createCard(product));
       });
@@ -338,6 +384,7 @@ if (!container || !searchInput || !categorySelect || !resultCount) {
   // =========================================
 
   searchInput.addEventListener("input", render);
+
   categorySelect.addEventListener("change", render);
 
   // إظهار عدد النتائج لقارئات الشاشة
