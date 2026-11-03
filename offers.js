@@ -1,15 +1,24 @@
 "use strict";
 
 /* =========================================
+   NOKHBA | نخبة
    عروض وخصومات مصر
    Amazon Egypt Affiliate
    ========================================= */
 
-// معرّف العمولة الحالي — لا تغيّره
+// معرّف الشريك الحالي — لا تغيّره
 const TAG = "ashrafhassa03-21";
 
-// المنتجات الأصلية — لا تحذف أي منتج
-// الشكل: القسم | اسم المنتج | كلمة البحث | الأيقونة
+// أسماء الأقسام
+const CATEGORY_NAMES = {
+  electronics: "إلكترونيات",
+  fashion: "أزياء",
+  home: "المنزل",
+  grocery: "سوبر ماركت"
+};
+
+// المنتجات
+// القسم | اسم المنتج | كلمات البحث | الرمز التوضيحي
 const PRODUCTS = `
 electronics | سماعات بلوتوث لاسلكية | سماعات بلوتوث لاسلكية | 🎧
 electronics | باور بانك 20000 مللي أمبير | باور بانك 20000 | 🔋
@@ -17,307 +26,323 @@ electronics | ساعة ذكية | ساعة ذكية | ⌚
 electronics | شاحن موبايل سريع | شاحن سريع تايب سي | 🔌
 electronics | سماعة جيمنج | سماعة جيمنج | 🎮
 electronics | كشاف LED قابل للشحن | كشاف LED قابل للشحن | 🔦
-electronics | ماوس بلوتوث لاسلكي قابل للشحن | ماوس بلوتوث لاسلكي قابل لإعادة الشحن | 🖱️
+electronics | ماوس بلوتوث قابل للشحن | ماوس بلوتوث لاسلكي قابل لإعادة الشحن | 🖱️
 electronics | ماوس M256 لاسلكي صامت | ماوس M256 لاسلكي بلوتوث | 🖱️
-electronics | كابل USB-C من أنكر | كابل انكر USB-C | 🔌
-electronics | باور بانك 10000 مغناطيسي | باور بانك جيه ار 10000 مغناطيسي | 🔋
+electronics | كابل USB-C من أنكر | كابل أنكر USB-C | 🔌
+electronics | باور بانك 10000 مغناطيسي | باور بانك مغناطيسي 10000 | 🔋
 electronics | فلاش ميموري كينغستون 64 جيجا | فلاش ميموري كينغستون 64 جيجا | 💾
-electronics | حامل لابتوب قابل للطي | حامل لابتوب قابل للطي ألومنيوم | 💻
-electronics | جراب آيفون 17 برو سيليكون | جراب ايفون 17 برو سيليكون | 📱
+electronics | حامل لابتوب قابل للطي | حامل لابتوب ألومنيوم قابل للطي | 💻
+electronics | جراب آيفون 17 برو | جراب آيفون 17 برو سيليكون | 📱
 electronics | جراب سامسونج A52 | جراب سامسونج A52 | 📱
 electronics | بطاريات AA كاميليون | بطاريات AA كاميليون | 🔋
 fashion | حذاء رياضي رجالي | حذاء رياضي رجالي | 👟
-fashion | حذاء رياضي حريمي | حذاء رياضي حريمي | 👟
+fashion | حذاء رياضي حريمي | حذاء رياضي نسائي | 👟
 fashion | شنطة ظهر | شنطة ظهر | 🎒
 fashion | ساعة يد رجالي | ساعة يد رجالي | ⌚
 home | خلاط كهربائي | خلاط كهربائي | 🥤
 home | مكواة بخار | مكواة بخار | 👔
-home | مروحة | مروحة | 🌀
-home | طقم حلل | طقم حلل | 🍳
+home | مروحة | مروحة كهربائية | 🌀
+home | طقم حلل | طقم حلل مطبخ | 🍳
 home | شفاطات معدنية قابلة لإعادة الاستخدام | شفاطات استانلس ستيل | 🥤
-home | شماعات ملابس معدنية 10 قطع | شماعات ملابس 10 قطع | 👔
+home | شماعات ملابس معدنية 10 قطع | شماعات ملابس معدنية 10 قطع | 👔
 home | سلال تخزين قماشية قابلة للطي | سلال تخزين قماشية | 🧺
-home | طقم تنظيف أرضيات شرشوبة ودلو | شرشوبة مسطحة ودلو | 🧹
-home | بخاخ زيت للطبخ | بخاخ زيت زيتون للمطبخ | 🫒
+home | طقم تنظيف أرضيات | شرشوبة مسطحة ودلو | 🧹
+home | بخاخ زيت للطبخ | بخاخ زيت للمطبخ | 🫒
 home | مضرب رغوة حليب قابل للشحن | مضرب رغوة حليب قابل للشحن | ☕
 home | نبات صناعي للديكور | نبات صناعي يوكاليبتوس | 🌿
 grocery | قهوة | قهوة | ☕
 grocery | شوكولاتة | شوكولاتة | 🍫
-electronics | سماعات أذن لاسلكية TWS | سماعات ايربودز لاسلكية TWS | 🎧
-electronics | كيبورد لاسلكي | كيبورد لاسلكي | ⌨️
-electronics | ريموت وحامل موبايل للسيارة | حامل موبايل للسيارة | 🚗
-electronics | سماعة بلوتوث محمولة | سبيكر بلوتوث محمول | 🔊
-electronics | كاميرا مراقبة منزلية | كاميرا مراقبة واي فاي | 📷
-electronics | شاحن لاسلكي | شاحن لاسلكي سريع | 🔌
-fashion | حقيبة يد نسائية | حقيبة يد نسائية | 👜
-fashion | نظارة شمس | نظارة شمس | 🕶️
-fashion | محفظة جلد رجالي | محفظة جلد رجالي | 👛
-fashion | عطر رجالي | عطر رجالي | 🧴
-fashion | عطر نسائي | عطر نسائي | 🌸
-home | قلاية هوائية | قلاية هوائية إير فراير | 🍟
-home | غلاية مياه كهربائية | غلاية مياه كهربائية | ☕
-home | مكنسة كهربائية | مكنسة كهربائية | 🧹
-home | منظم أدراج ومستلزمات تخزين | منظم تخزين منزلي | 🧺
-home | مجفف شعر | مجفف شعر | 💇
-home | ماكينة حلاقة رجالي | ماكينة حلاقة رجالي | 🪒
-home | سخان مياه كهربائي صغير | سخان مياه | 🚿
-grocery | شاي | شاي | 🍵
-grocery | عسل طبيعي | عسل نحل طبيعي | 🍯
-grocery | زيت زيتون | زيت زيتون | 🫒
 `;
 
-// ألوان خلفيات الصور الاحتياطية
-const CATEGORY_STYLES = {
-  electronics: "linear-gradient(135deg,#e3f2fd,#bbdefb)",
-  fashion: "linear-gradient(135deg,#fce4ec,#f8bbd0)",
-  home: "linear-gradient(135deg,#e8f5e9,#c8e6c9)",
-  grocery: "linear-gradient(135deg,#fff3e0,#ffe0b2)"
-};
-
-// صور توضيحية فقط، وليست صورًا مؤكدة لموديلات المنتجات
+// صور توضيحية لبعض الفئات فقط
+// لا تمثل بالضرورة الموديل الفعلي للمنتج
 const PRODUCT_IMAGES = [
   {
-    match: "سماعات بلوتوث لاسلكية",
-    url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=75"
+    match: /سماعات بلوتوث لاسلكية/,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
   {
-    match: "ساعة ذكية",
-    url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=75"
+    match: /سماعة جيمنج/,
+    image: "https://images.unsplash.com/photo-1599669454699-248893623440?auto=format&fit=crop&w=900&q=80"
   },
   {
-    match: "حذاء رياضي رجالي",
-    url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=75"
+    match: /ساعة ذكية|ساعة يد رجالي/,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
   {
-    match: "قهوة",
-    url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=75"
+    match: /حذاء/,
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /قهوة/,
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    match: /حامل لابتوب/,
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=900&q=80"
   }
 ];
 
-// إضافة صورة توضيحية للمنتجات المحددة فقط
-function getProductImage(title) {
-  const item = PRODUCT_IMAGES.find(
-    image => image.match === title
-  );
-
-  return item ? item.url : "";
-}
-
-// إنشاء رابط بحث أمازون مع معرّف العمولة
+// إنشاء رابط بحث تابع لأمازون مصر
 function buildAmazonSearch(query) {
-  return (
-    "https://www.amazon.eg/s?k=" +
-    encodeURIComponent(query) +
-    "&tag=" +
-    encodeURIComponent(TAG)
-  );
+  const url = new URL("https://www.amazon.eg/s");
+
+  url.searchParams.set("k", query);
+  url.searchParams.set("tag", TAG);
+
+  return url.toString();
 }
 
-// قراءة المنتجات
-const offers = PRODUCTS
+// تحويل البيانات النصية إلى مصفوفة منتجات
+const products = PRODUCTS
+  .trim()
   .split("\n")
   .map(line => line.trim())
-  .filter(line => line.includes("|"))
+  .filter(Boolean)
   .map(line => {
-    const [category, title, keyword, icon] =
-      line.split("|").map(value => value.trim());
+    const parts = line.split("|").map(value => value.trim());
+
+    const category = parts[0];
+    const title = parts[1];
+    const keywords = parts[2] || title;
+    const icon = parts[3] || "🛍️";
+
+    // تجاهل أي سطر غير مكتمل
+    if (!category || !title) {
+      return null;
+    }
+
+    // التأكد من صحة القسم
+    if (!Object.prototype.hasOwnProperty.call(
+      CATEGORY_NAMES,
+      category
+    )) {
+      return null;
+    }
+
+    // البحث عن صورة توضيحية مناسبة
+    const imageEntry = PRODUCT_IMAGES.find(entry =>
+      entry.match.test(title)
+    );
 
     return {
       category,
       title,
-      keyword,
-      icon: icon || "🛍️",
-      image: getProductImage(title),
-      store: "أمازون مصر",
-      link: buildAmazonSearch(keyword)
-    };
-  });
+      keywords,
+      icon,
+      image: imageEntry ? imageEntry.image : null,
+      link: buildAmazonSearch(keywords),
+      buttonText: "ابحث في أمازون مصر",
 
-// إضافة منتج نينجا برابطه المباشر
-offers.push({
+      note: imageEntry
+        ? "صورة توضيحية للفئة وليست تأكيدًا للموديل. تحقق من المنتج والسعر والتوافر على أمازون مصر."
+        : "لا تتوفر صورة توضيحية محددة لهذا المنتج حاليًا. استخدم رابط أمازون للتحقق من صورته الفعلية."
+    };
+  })
+  .filter(Boolean);
+
+// إضافة منتج نينجا بالرابط المباشر
+products.push({
   category: "home",
   title: "محضرة طعام نينجا Ninja BN800EU ثلاثية الوظائف، 1200 واط",
-  keyword: "Ninja BN800EU",
-  icon: "🍲",
-  image: "",
-  store: "أمازون مصر",
-  link: "https://www.amazon.eg/dp/B08HSF4FY6?tag=" +
-    encodeURIComponent(TAG)
+  keywords: "Ninja BN800EU محضرة طعام خلاط 1200 واط",
+  icon: "🥤",
+  image: null,
+  link: "https://www.amazon.eg/dp/B08HSF4FY6?tag=" + encodeURIComponent(TAG),
+  buttonText: "عرض المنتج على أمازون مصر",
+  note: "تحقق من صورة الموديل الفعلية والسعر والمواصفات والتوافر على أمازون مصر."
 });
 
+// =========================================
 // عناصر الصفحة
+// =========================================
+
 const container = document.getElementById("offers");
 const searchInput = document.getElementById("search");
 const categorySelect = document.getElementById("category");
 const resultCount = document.getElementById("result-count");
 
-// التحقق من وجود العناصر الأساسية
-if (!container || !searchInput || !categorySelect) {
+// التحقق من وجود العناصر المطلوبة
+if (!container || !searchInput || !categorySelect || !resultCount) {
   console.error(
-    "تعذر العثور على عناصر الموقع: offers أو search أو category"
+    "تعذر تشغيل المنتجات. تحقق من وجود العناصر التالية في index.html: offers وsearch وcategory وresult-count."
   );
 } else {
 
-  // تطبيع النص العربي لتسهيل البحث
-  function normalizeArabic(text) {
-    return String(text || "")
-      .toLowerCase()
-      .replace(/[أإآ]/g, "ا")
+  // =========================================
+  // توحيد الكتابة العربية لتحسين البحث
+  // =========================================
+
+  function normalizeArabic(value) {
+    return String(value || "")
+      .toLocaleLowerCase("ar")
+      .normalize("NFD")
+      .replace(/[\u064B-\u065F\u0670]/g, "")
+      .replace(/[أإآٱ]/g, "ا")
       .replace(/ى/g, "ي")
-      .replace(/ة/g, "ه")
-      .replace(/[ًٌٍَُِّْـ]/g, "")
+      .replace(/ؤ/g, "و")
+      .replace(/ئ/g, "ي")
+      .replace(/ـ/g, "")
       .replace(/[^\p{L}\p{N}\s]/gu, " ")
       .replace(/\s+/g, " ")
       .trim();
   }
 
-  // إنشاء عنصر الصورة أو الأيقونة الاحتياطية
-  function createVisual(product) {
+  // =========================================
+  // عرض رمز المنتج عند عدم وجود صورة
+  // =========================================
+
+  function showFallback(visual, product) {
+    visual.classList.add("image-fallback");
+
+    const fallback = document.createElement("span");
+
+    fallback.className = "product-fallback-icon";
+    fallback.textContent = product.icon || "🛍️";
+    fallback.setAttribute("aria-hidden", "true");
+
+    visual.replaceChildren(fallback);
+  }
+
+  // =========================================
+  // إنشاء مساحة الصورة
+  // =========================================
+
+  function createProductVisual(product) {
     const visual = document.createElement("div");
     visual.className = "product-visual";
 
-    if (product.image) {
-      const img = document.createElement("img");
-
-      img.className = "product-image";
-      img.src = product.image;
-      img.alt = "صورة توضيحية: " + product.title;
-      img.loading = "lazy";
-      img.decoding = "async";
-
-      img.onerror = function () {
-        visual.innerHTML = "";
-        visual.classList.add("image-fallback");
-        createFallbackIcon(visual, product);
-      };
-
-      visual.appendChild(img);
-
-      const note = document.createElement("span");
-      note.className = "image-note";
-      note.textContent = "صورة توضيحية";
-      visual.appendChild(note);
-
-    } else {
-      visual.classList.add("image-fallback");
-      createFallbackIcon(visual, product);
+    if (!product.image) {
+      showFallback(visual, product);
+      return visual;
     }
+
+    const img = document.createElement("img");
+
+    img.className = "product-image";
+    img.alt = "صورة توضيحية لفئة: " + product.title;
+    img.loading = "lazy";
+    img.decoding = "async";
+
+    img.addEventListener("error", function () {
+      showFallback(visual, product);
+    }, { once: true });
+
+    img.src = product.image;
+
+    visual.appendChild(img);
 
     return visual;
   }
 
-  // الأيقونة الاحتياطية
-  function createFallbackIcon(parent, product) {
-    parent.style.background =
-      CATEGORY_STYLES[product.category] ||
-      CATEGORY_STYLES.grocery;
-
-    const icon = document.createElement("div");
-    icon.className = "product-fallback-icon";
-    icon.textContent = product.icon || "🛍️";
-    icon.setAttribute("aria-hidden", "true");
-
-    parent.appendChild(icon);
-  }
-
+  // =========================================
   // إنشاء بطاقة المنتج
+  // =========================================
+
   function createCard(product) {
     const card = document.createElement("article");
     card.className = "card";
 
-    const visual = createVisual(product);
-    card.appendChild(visual);
+    const visual = createProductVisual(product);
 
     const body = document.createElement("div");
-    body.className = "body";
+    body.className = "product-body";
+
+    const category = document.createElement("span");
+    category.className = "category-label";
+    category.textContent = CATEGORY_NAMES[product.category];
 
     const title = document.createElement("h3");
     title.textContent = product.title;
 
-    const store = document.createElement("span");
-    store.className = "store";
-    store.textContent = product.store;
+    const note = document.createElement("p");
+    note.className = "product-note";
+    note.textContent = product.note;
 
-    const button = document.createElement("a");
-    button.className = "btn";
-    button.href = product.link;
-    button.target = "_blank";
-    button.rel = "nofollow sponsored noopener noreferrer";
-    button.textContent = "شوف العروض";
+    const link = document.createElement("a");
 
-    body.appendChild(title);
-    body.appendChild(store);
-    body.appendChild(button);
+    link.className = "btn";
+    link.href = product.link;
+    link.target = "_blank";
+    link.rel = "nofollow sponsored noopener noreferrer";
+    link.textContent = product.buttonText;
 
-    card.appendChild(body);
+    link.setAttribute(
+      "aria-label",
+      product.buttonText + ": " + product.title
+    );
+
+    body.append(category, title, note, link);
+    card.append(visual, body);
 
     return card;
   }
 
-  // تحديث عدد النتائج
-  function updateCount(count) {
-    if (resultCount) {
-      resultCount.textContent =
-        "عدد المنتجات: " + count;
-    }
-  }
+  // =========================================
+  // البحث والتصفية
+  // =========================================
 
-  // عرض المنتجات
   function render() {
     const query = normalizeArabic(searchInput.value);
     const selectedCategory = categorySelect.value;
 
-    container.innerHTML = "";
+    const searchTerms = query
+      ? query.split(" ")
+      : [];
 
-    const filtered = offers.filter(product => {
-      const categoryMatch =
+    const filtered = products.filter(product => {
+      const matchesCategory =
         selectedCategory === "all" ||
         product.category === selectedCategory;
 
-      const searchableText = normalizeArabic(
-        product.title + " " +
-        product.keyword + " " +
-        product.store + " " +
-        product.category
+      const searchableText = normalizeArabic([
+        product.title,
+        product.keywords,
+        CATEGORY_NAMES[product.category]
+      ].join(" "));
+
+      const matchesSearch = searchTerms.every(term =>
+        searchableText.includes(term)
       );
 
-      const searchMatch =
-        !query ||
-        query.split(" ").every(word =>
-          searchableText.includes(word)
-        );
-
-      return categoryMatch && searchMatch;
+      return matchesCategory && matchesSearch;
     });
 
     const fragment = document.createDocumentFragment();
 
-    filtered.forEach(product => {
-      fragment.appendChild(createCard(product));
-    });
-
-    container.appendChild(fragment);
-
     if (filtered.length === 0) {
       const empty = document.createElement("p");
-      empty.className = "empty-results";
+
+      empty.className = "empty-state";
       empty.textContent =
-        "لم نجد منتجات مطابقة للبحث. جرّب كلمة أخرى.";
-      container.appendChild(empty);
+        "لم نعثر على منتجات مطابقة. جرّب كلمات أخرى أو اختر كل الأقسام.";
+
+      fragment.appendChild(empty);
+
+    } else {
+      filtered.forEach(product => {
+        fragment.appendChild(createCard(product));
+      });
     }
 
-    updateCount(filtered.length);
+    // تحديث المنتجات المعروضة
+    container.replaceChildren(fragment);
+
+    // تحديث عدد النتائج
+    resultCount.textContent =
+      `عدد النتائج: ${filtered.length} من ${products.length} منتج`;
   }
 
-  // أحداث البحث والتصفية
+  // =========================================
+  // تشغيل البحث والتصفية
+  // =========================================
+
   searchInput.addEventListener("input", render);
   categorySelect.addEventListener("change", render);
 
-  // العرض الأول عند فتح الموقع
-  render();
+  // إظهار عدد النتائج لقارئات الشاشة
+  resultCount.setAttribute("aria-live", "polite");
 
-  console.log(
-    "تم تحميل " + offers.length +
-    " منتجًا بنجاح."
-  );
+  // العرض الأول عند فتح الصفحة
+  render();
 }
